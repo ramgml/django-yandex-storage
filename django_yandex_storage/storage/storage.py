@@ -1,13 +1,13 @@
 from django.core.files.storage import Storage
 from django.conf import settings
 from yadiskapi.yadiskapi import Disk
-import warnings
-from django.utils.deprecation import RemovedInDjango20Warning
 import requests
 from datetime import datetime
 
+
 class YandexStorageException(Exception):
     pass
+
 
 class YandexStorage(Storage):
     def __init__(self, options=None):
@@ -64,13 +64,8 @@ class YandexStorage(Storage):
         Returns the last accessed time (as datetime object) of the file
         specified by name. Deprecated: use get_accessed_time() instead.
         """
-        warnings.warn(
-            'Storage.accessed_time() is deprecated in favor of get_accessed_time().',
-            RemovedInDjango20Warning,
-            stacklevel=2,
-        )
         dt = datetime.strptime(self.disk.get_resources_metainfo('app:/{}'.format(name))['modified'].replace('-', '').
-                                replace(':', ''), '%Y%m%dT%H%M%S%z')
+                               replace(':', ''), '%Y%m%dT%H%M%S%z')
         return dt
 
     def created_time(self, name):
@@ -78,11 +73,6 @@ class YandexStorage(Storage):
         Returns the creation time (as datetime object) of the file
         specified by name. Deprecated: use get_created_time() instead.
         """
-        warnings.warn(
-            'Storage.created_time() is deprecated in favor of get_created_time().',
-            RemovedInDjango20Warning,
-            stacklevel=2,
-        )
         dt = datetime.strptime(self.disk.get_resources_metainfo('app:/{}'.format(name))['created'].replace('-', '').
                                replace(':', ''), '%Y%m%dT%H%M%S%z')
         return dt
@@ -92,15 +82,9 @@ class YandexStorage(Storage):
         Returns the last modified time (as datetime object) of the file
         specified by name. Deprecated: use get_modified_time() instead.
         """
-        warnings.warn(
-            'Storage.modified_time() is deprecated in favor of get_modified_time().',
-            RemovedInDjango20Warning,
-            stacklevel=2,
-        )
         dt = datetime.strptime(self.disk.get_resources_metainfo('app:/{}'.format(name))['modified'].replace('-', '').
-                                replace(':', ''), '%Y%m%dT%H%M%S%z')
+                               replace(':', ''), '%Y%m%dT%H%M%S%z')
         return dt
-
 
     def _save(self, name, content):
         content.open()
@@ -111,4 +95,3 @@ class YandexStorage(Storage):
         content.close()
         self.disk.publish_resources('app:/{}'.format(name))
         return name
-
