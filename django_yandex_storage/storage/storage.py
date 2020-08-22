@@ -88,7 +88,7 @@ class YandexStorage(Storage):
 
     def _save(self, name, content):
         content.open()
-        upload_path = self.disk.upload('app:/{}'.format(name))['href']
+        upload_path = self.disk.upload('app:/{}'.format(name), overwrite=True)['href']
         response = requests.put(upload_path, content.read())
         if response.status_code not in [201, 202]:
             raise YandexStorageException(response.status_code)
